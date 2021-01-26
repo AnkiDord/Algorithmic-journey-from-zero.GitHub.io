@@ -10,3 +10,19 @@
 输入：[[1,2,3],[4,5,6]]
 输出：[[1,4],[2,5],[3,6]]
 
+个人想法：1.把同列元素变成同行元素，也就是将每行第一个元素放到同一列表中，第二行元素放到同一列表中，以此类推，将上诉所有列表放入同一列表中。
+          2.直接用numpy转置
+          第一种想法不会编程？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+官方解法：尺寸为 R x C 的矩阵 A 转置后会得到尺寸为 C x R 的矩阵 ans，对此有 ans[c][r] = A[r][c]。让我们初始化一个新的矩阵 ans 来表示答案。然后，我们将酌情复制矩阵的每个条目。
+
+python：xrange() 函数用法与 range 完全相同，所不同的是生成的不是一个数组，而是一个生成器。
+class Solution:
+    def transpose(self, A: List[List[int]]) -> List[List[int]]:
+        R, C = len(A), len(A[0])
+        ans  = [[None]*R for i in range(C)]
+        for r, row in enumerate(A):
+            for c, rank in enumerate(row):
+                ans[c][r] = A[r][c]
+        return ans
+时间复杂度O(R*C)
+空间复杂度O(R*C)
