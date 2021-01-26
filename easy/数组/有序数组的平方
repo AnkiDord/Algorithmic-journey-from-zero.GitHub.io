@@ -12,3 +12,80 @@
   输出：[4,9,9,49,121]
   
 进阶：请你设计时间复杂度为 O(n) 的算法解决本问题
+
+个人想法：求数组元素平方，在排序
+  class Solution:
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        for i in range(len(nums)):
+            nums[i] = pow(nums[i], 2)
+        nums.sort()
+        return nums
+时间复杂度O(nlogn)
+空间复杂度O(logn)
+
+官方答案：1. 直接平方排序，参考个人思想
+          2. 双指针(1) 显然，如果数组 AA 中的所有数都是非负数，那么将每个数平方后，数组仍然保持升序；如果数组 AA 中的所有数都是负数，那么将每个数平方后，数组会保持降序。
+                      这样一来，如果我们能够找到数组 AA 中负数与非负数的分界线，那么就可以用类似「归并排序」的方法了。具体地，我们设 \textit{neg}neg 为数组 AA 中负数
+                      与非负数的分界线，也就是说，A[0]A[0] 到 A[\textit{neg}]A[neg] 均为负数，而 A[\textit{neg}+1]A[neg+1] 到A[n-1]A[n−1] 均为非负数。当我们将数组 
+                      AA 中的数平方后，那么 A[0]A[0] 到 A[\textit{neg}]A[neg] 单调递减，A[\textit{neg}+1]A[neg+1] 到 A[n-1]A[n−1] 单调递增。由于我们得到了两个已经
+                      有序的子数组，因此就可以使用归并的方法进行排序了。具体地，使用两个指针分别指向位置 \textit{neg}neg 和 \textit{neg}+1neg+1，每次比较两个指针对应
+                      的数，选择较小的那个放入答案并移动指针。当某一指针移至边界时，将另一指针还未遍历到的数依次放入答案。
+                      
+            class Solution:
+            def sortedSquares(self, A: List[int]) -> List[int]:
+                n = len(A)
+                negative = -1
+                for i, num in enumerate(A):
+                    if num < 0:
+                        negative = i
+                    else:
+                        break
+
+                ans = list()
+                i, j = negative, negative + 1
+                while i >= 0 or j < n:
+                    if i < 0:
+                        ans.append(A[j] * A[j])
+                        j += 1
+                    elif j == n:
+                        ans.append(A[i] * A[i])
+                        i -= 1
+                    elif A[i] * A[i] < A[j] * A[j]:
+                        ans.append(A[i] * A[i])
+                        i -= 1
+                    else:
+                        ans.append(A[j] * A[j])
+                        j += 1
+
+                return ans
+                
+        时间复杂度O(N)N是数组A的长度
+        空间复杂度O(1)
+      
+      3.双指针(2)同样地，我们可以使用两个指针分别指向位置 00 和 n-1n−1，每次比较两个指针对应的数，选择较大的那个逆序放入答案并移动指针。这种方法无需处理某一指针移动
+        至边界的情况，读者可以仔细思考其精髓所在。
+        
+        class Solution:
+    def sortedSquares(self, A: List[int]) -> List[int]:
+        n = len(A)
+        ans = [0] * n
+        
+        i, j, pos = 0, n - 1, n - 1
+        while i <= j:
+            if A[i] * A[i] > A[j] * A[j]:
+                ans[pos] = A[i] * A[i]
+                i += 1
+            else:
+                ans[pos] = A[j] * A[j]
+                j -= 1
+            pos -= 1
+        
+        return ans
+
+    时间复杂度：O(N)O，其中N是数组A的长度。
+    空间复杂度：O(1)
+
+
+      
+
+
