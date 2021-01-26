@@ -1,0 +1,72 @@
+# 问题描述
+  数组中占比超过一半的元素称之为主要元素。给定一个整数数组，找到它的主要元素。若没有，返回-1。
+示例1：
+  输入：[1,2,5,9,5,9,5,5,5]
+  输出：5
+示例2：
+  输入：[3,2]
+  输出：-1
+示例3：
+  输入：[2,2,1,1,1,2,2]
+  输出：2
+ 
+目标：你有办法在时间复杂度为 O(N)，空间复杂度为 O(1) 内完成吗？
+
+个人想法：对列表中的各个数字做统计，返回大于一半元素的数字，用集合找出不重复元素，集合长度为H，输出列表长度为N，H<=N
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        nums_set = list(set(nums))
+        stat = [0*i for i in range(len(nums_set))]
+        for i in range(len(nums_set)):
+            for j in range(len(nums)):
+                if nums[j] == nums_set[i]:
+                    stat[i] = stat[i] + 1
+                else:
+                    continue
+
+        for i in range(len(stat)):
+            if stat[i] > len(nums)/2:
+                return nums_set[i]
+            else:
+                continue
+        
+        return -1
+        
+ 时间复杂度O(H*N) + O(H) <= O(N2) + O(N)
+ 空间复杂度O(H) + O(H) <= O(N)
+ 
+ 优化方法见下面最优解中的统计
+
+解法：
+  1. 排序，主要元素是大于列表元素一半的元素，所以将列表排序后，前一半列表中的元素等于一半列表中的元素即为主要元素
+    class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+       res = -1
+        halflen = int(len(nums) / 2)
+        nums.sort() # 排序由小到大
+        for i in range( 0 , len(nums) - halflen):
+            if(nums[i] == nums[i + halflen]):
+                res = nums[i]
+                break
+
+        return res
+     找出.sort()时间复杂度
+     计算时间空间复杂度
+  2. 统计，
+    class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+         a = list(set(nums))
+         res = -1
+         for i in a:
+             if(nums.count(i) > len(nums) / 2):   # .count统计元素个数
+                 res = i
+                 break
+        
+        return res
+     找出.count()时间复杂度
+     计算时间空间复杂度
+        
+  3.摩尔投票法(最优解法)
+  4.哈希表(用字典（哈希表）记录列表每个元素及其出现次数, 用zip函数匹配最大值--键, 输出对应键即可)
+
+
