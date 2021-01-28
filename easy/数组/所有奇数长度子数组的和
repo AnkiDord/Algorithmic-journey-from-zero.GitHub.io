@@ -37,7 +37,26 @@ class Solution:
                 b = i + n
                 if b > len(arr):
                     break
-                sum_out.append(sum(arr[i: i + n]))
+                sum_out.append(sum(arr[i: b]))
             print(sum_out)
         return sum(sum_out)
-        
+
+1.把sum_out改成整数o，sum_out.append(sum(arr[i: i + n]))改成，sum_out += sum(arr[i: i + n]，return sum_out，可减少内存和运算时间
+2.m个数中连续取n个数一共能取m-n+1组, 将len(arr)//n * n改成len(arr)-n+1，把b去掉改成i+n，可减少运行时间
+3.将while去掉换成for j in range(1, len(arr)+1, 2),把n去点换成j即可减少时间复杂度和空间复杂度
+class Solution:
+    def sumOddLengthSubarrays(self, arr: List[int]) -> int:
+        sum_out = 0
+        for j in range(1, len(arr)+1, 2):
+            for i in range(len(arr)-j+1):
+                sum_out = sum_out + sum(arr[i: i + j])
+        return sum_out
+4.去掉sum函数多加一层循环，会增加时间复杂度
+class Solution:
+    def sumOddLengthSubarrays(self, arr: List[int]) -> int:
+        sum_out = 0
+        for j in range(1, len(arr)+1, 2):
+            for i in range(len(arr)-j+1):
+                for l in arr[i:i+j]:
+                    sum_out = sum_out + l
+        return sum_out
