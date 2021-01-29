@@ -1,0 +1,111 @@
+# 题目描述
+# 给你一个整型数组 nums ，在数组中找出由三个数组成的最大乘积，并输出这个乘积。
+
+# 示例1
+# 输入：nums = [1,2,3]
+# 输出：6
+
+# 示例2
+# 输入：nums = [1,2,3,4]
+# 输出：24
+
+# 示例3
+# 输入：nums = [-1,-2,-3]
+# 输出：-6
+
+'''
+# 个人想法：最大的数字乘的数最大(数组全是非正数或者非负数)
+# 对于有正有负的数组，要么最后三位数乘积最大要么前两位数与最后一位数乘积最大
+class Solution:
+    def maximumProduct(self, nums: List[int]) -> int:
+        nums.sort()
+        if nums[-1]*nums[-2]*nums[-3] > nums[-1]*nums[0]*nums[1]:
+            return nums[-1]*nums[-2]*nums[-3]
+        else:
+            return nums[-1]*nums[0]*nums[1]
+# 改进，直接返回两个数中最大的一个, 时间复杂度增加了没有 if，else快
+class Solution:
+    def maximumProduct(self, nums: List[int]) -> int:
+        nums.sort()
+        return max(nums[-1]*nums[-2]*nums[-3], nums[-1]*nums[0]*nums[1])
+# sort() 时间复杂度O(nlogn), 空间复杂度O(n)
+
+# 时间复杂度 nlongn + 3 = O(nlogn)
+# 空间复杂度O(n)
+
+'''
+# 官方解法
+# 1 排序参考个人想法
+# 线性扫描(目前最好)：不用排序，找出最大的三个数和最小的两个数。
+# 参数定义
+#
+# a,b,c：最大的三个数，a>=b>=c
+# d,e：最小的两个数，d<=e
+# 思路
+#
+# 先令a,b,c为float('-inf')(负无穷),d,e为float('inf')(正无穷)
+# 当前值为num
+# 更新最大的三个数
+# 如果num>a，则将a更新为num，b,c顺次更新为之前的a,b
+# 如果b<num<=a，则将b更新为num，c更新为b
+# 如果c<num<=b，则将c更新为num
+# 更新最小的两个数：
+# 如果num<d，则将d更新为num，e更新为d
+# 如果d<num<=e，则将e更新为num
+# 复杂度分析
+#
+# 时间复杂度：O(N)
+# 空间复杂度：O(1)
+
+# 第一种写法(错误)
+#  a = i
+#  b = a
+#  c = b 与 a = b = c = i等价
+def maximumProduct(nums):
+        a = b = c = float("-inf")
+        d = e = float("inf")
+        for i in nums:
+            if i > a:
+                a = i
+                b = a
+                c = b
+                print(a, b, c, d, e)
+            elif b < i:
+                b = i
+                c = b
+                print(a, b, c, d, e)
+            elif c < i:
+                c = i
+                print(a, b, c, d, e)
+            if i < d:
+                d = i
+                e = d
+                print(a, b, c, d, e)
+            elif i < e:
+                e = i
+                print(a, b, c, d, e)
+        print(a, b, c, d, e)
+        return max(a*b*c, a*d*e)
+
+# 第二种写法(正确)
+class Solution:
+    def maximumProduct(self, nums: List[int]) -> int:
+        a = b = c = float("-inf")
+        d = e = float("inf")
+        for y, i in enumerate(nums):
+            if i > a:
+                a, b, c = i, a, b
+            elif b < i:
+                b, c = i, b
+            elif c < i:
+                c = i
+            if i < d:
+                d, e = i, d
+            elif i < e:
+                e = i
+
+        return max(a*b*c, a*d*e)
+
+# 时间复杂度 for循环n次,其他程序if，elif最多运行6次，赋值语句两次
+# T(n) = n + 6 + 2
+# 空间复杂度 O(1)
