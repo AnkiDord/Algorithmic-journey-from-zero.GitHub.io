@@ -1,0 +1,39 @@
+# 题目描述
+# 给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false 。
+
+# 示例1
+# 输入：arr = [2,6,4,1]
+# 输出：false
+# 解释：不存在连续三个元素都是奇数的情况。
+
+# 示例2
+# 输入：arr = [1,2,34,3,4,5,7,23,12]
+# 输出：true
+# 解释：存在连续三个元素都是奇数的情况，即 [5,7,23]
+
+'''
+# 个人想法 三个连续奇数，枚举
+class Solution:
+    def threeConsecutiveOdds(self, arr: List[int]) -> bool:
+        for i in range(2, len(arr)):
+            if arr[i-2]%2 != 0 and arr[i-1]%2 != 0 and arr[i]%2 != 0:
+                return True
+                break
+            else:
+                continue
+        return False
+# 时间复杂度 O(N) N为数组长度
+# 空间复杂度 O(1)
+
+
+# 官方解法
+# 方法一参考个人思想
+# any() 函数用于判断给定的可迭代参数 iterable 是否全部为 False，则返回 False，如果有一个为 True，则返回 True。
+class Solution:
+    def threeConsecutiveOdds(self, arr: List[int]) -> bool:
+        n = len(arr)
+        return n >= 3 and \
+            any(arr[i] & 1 and arr[i + 1] & 1 and arr[i + 2] & 1 \
+                for i in range(n - 2))
+'''
+
