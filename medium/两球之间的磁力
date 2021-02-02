@@ -1,0 +1,37 @@
+# 题目描述
+# 见力扣
+# 个人想法：当m=2即为最大最小值，当m>=2时找出最大最小值在取中间值找出左右两边最大最小值，
+# 分别比较第二组最大最小值与第一组最大最小值之间的最小磁力和最大保留，接下来在寻找各自中间
+# 值的与之前的最大最小值之间的磁力值保留最小磁力和最大值，直至需找到m个(没用数组不是按顺序来的)
+
+# 官方解法二分查找
+# class Solution:
+#     def maxDistance(self, position: List[int], m: int) -> int:
+#         def check(x: int) -> bool:
+#             pre = position[0]
+#             cnt = 1
+#             for i in range(1, len(position)):
+#                 if position[i] - pre >= x:
+#                     pre = position[i]
+#                     cnt += 1
+#             return cnt >= m
+#
+#         position.sort()
+#         left, right, ans = 1, position[-1] - position[0], -1
+#         while left <= right:
+#             mid = (left + right) // 2;
+#             if check(mid):
+#                 ans = mid
+#                 left = mid + 1
+#             else:
+#                 right = mid - 1
+#
+#         return ans
+
+
+# 时间复杂度：包含两部分一是.sort()，O(nlogn)其中n为数组position的长度，S为篮子位置上限，一共有n个位置，进行二分查找进行二分查找所需要的
+# 时间复杂度为O(logS),总的时间复杂度为O(nlogS + nlogn)=O(nlogSn)
+# 空间复杂度为：O(n)是sort()排序需要的栈
+
+
+
