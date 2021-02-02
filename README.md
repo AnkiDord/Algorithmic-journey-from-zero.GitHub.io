@@ -13,3 +13,6 @@
             ![image](https://github.com/AnkiDord/Algorithmic-journey-from-zero.GitHub.io/blob/main/%E5%A5%87%E6%80%AA%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A61.png)
             
 空间复杂度：
+
+(1) 二分查找法时间复杂度：O(logn)
+(2) python中sort（）排序时间复杂度为O(nlogn)，空间复杂度为O(n)
