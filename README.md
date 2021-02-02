@@ -15,4 +15,4 @@
 空间复杂度：
 
 (1) 二分查找法时间复杂度：O(logn)
-(2) python中sort（）排序时间复杂度为O(nlogn)，空间复杂度为O(n)
+(2) python中sort()排序时间复杂度为O(nlogn)，空间复杂度为O(n)
