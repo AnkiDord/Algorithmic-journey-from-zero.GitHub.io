@@ -1,0 +1,65 @@
+# 题目描述
+# 见力扣240题
+
+# 编写一个高效的算法来搜索mxn矩阵 matrix 中的一个目标值 target 。该矩阵具有以下特性：
+#
+# 每行的元素从左到右升序排列。
+# 每列的元素从上到下升序排列。
+
+# 行列元素都是按顺序的所以，考虑二分查找法(失败)
+
+# 官方解法
+# 方法一：暴力解法判断每行数组中是否有目标值
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        for i in range(len(matrix)):
+            if target in matrix[i]:
+                return True
+                break
+
+        return False
+
+# 时间复杂度：O(m*n), m,n为矩阵的宽和高
+# 空间复杂度：O(1)
+
+# 方法二：二分搜索法
+class Solution:
+    def binary_search(self, matrix, target, start, vertical):
+        lo = start
+        hi = len(matrix[0])-1 if vertical else len(matrix)-1
+
+        while hi >= lo:
+            mid = (lo + hi)//2
+            if vertical: # searching a column
+                if matrix[start][mid] < target:
+                    lo = mid + 1
+                elif matrix[start][mid] > target:
+                    hi = mid - 1
+                else:
+                    return True
+            else: # searching a row
+                if matrix[mid][start] < target:
+                    lo = mid + 1
+                elif matrix[mid][start] > target:
+                    hi = mid - 1
+                else:
+                    return True
+
+        return False
+
+    def searchMatrix(self, matrix, target):
+        # an empty matrix obviously does not contain `target`
+        if not matrix:
+            return False
+
+        # iterate over matrix diagonals starting in bottom left.
+        for i in range(min(len(matrix), len(matrix[0]))):
+            vertical_found = self.binary_search(matrix, target, i, True)
+            horizontal_found = self.binary_search(matrix, target, i, False)
+            if vertical_found or horizontal_found:
+                return True
+
+        return False
+
+
+
