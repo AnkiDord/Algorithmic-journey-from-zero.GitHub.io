@@ -1,0 +1,74 @@
+# 题目描述
+# 给定一个二进制数组， 计算其中最大连续1的个数
+
+# 示例1
+# 输入: [1,1,0,1,1,1]
+# 输出: 3
+# 解释: 开头的两位和最后的三位都是连续1，所以最大连续1的个数是 3.
+
+# 注意
+# 输入的数组只包含 0 和1。
+# 输入数组的长度是正整数，且不超过 10,000。
+
+# 个人思想：将给定数组nums中位置[0]和末尾处添加0，统计新的nums中0的位置添加到zero_set(列表)中，将zero_set中
+# 相邻元素值相减在-1，-1是因为两个数之差包含了右边数字需要减下去，将得到的差值添加到one_nums，在one_nums中取最、
+# 大值即为最长连续1的个数
+
+class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+        if len(nums) == 1 and nums[0] == 1:
+            return 1
+        if len(nums) == 0 or (len(nums) == 1 and nums[0] == 0):
+            return 0
+        zero_set = []
+        one_nums = []
+        nums.insert(0, 0)
+        nums.append(0)
+        for i in range(len(nums)):
+            if nums[i] == 0:
+                zero_set.append(i)
+
+        for i in range(len(zero_set) - 1):
+            one_nums.append((zero_set[i + 1] - zero_set[i] - 1))
+
+        return max(one_nums)
+
+# 时间复杂度：O(N + M), N为给定数组的长度， M为数组中0的个数
+# 空间复杂度：O(M)
+
+
+# 官方解法
+# 方法一：一次遍历
+# 题目的约束让这个问题变得简单，使得我们可以在一次遍历解决它。
+# 算法：
+# 用一个计数器 count 记录 1 的数量，另一个计数器 maxCount 记录当前最大的 1 的数量。
+# 当我们遇到 1 时，count 加一。
+# 当我们遇到 0 时：
+# 将 count 与 maxCount 比较，maxCoiunt 记录较大值。
+# 将 count 设为 0。
+# 返回 maxCount。
+
+class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+        count = 0
+        maxCount = 0
+        for i in range(len(nums)):
+            if nums[i] == 1:
+                count += 1
+            else:
+                if count > maxCount:
+                    maxCount = count
+                count = 0
+
+        return max(maxCount, count)
+
+# 时间复杂度：O(N),N为给定数组长度
+# 空间复杂度：O(1),仅使用了count和maxCount
+
+# 方法二
+# 在 Python 中可以使用 map 和 join 来解决此问题。
+# 使用 splits 函数在 0 处分割将数组转换成字符串。
+# 在获取子串的最大长度就是最大连续 1 的长度。
+
+def findMaxConsecutiveOnes(self, nums):
+    return max(map(len, ''.join(map(str, nums)).split('0')))
