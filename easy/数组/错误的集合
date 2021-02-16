@@ -1,0 +1,95 @@
+# 题目描述
+# 集合 s 包含从 1 到n的整数。不幸的是，因为数据错误，
+# 导致集合里面某一个数字复制了成了集合里面的另外一个数字的值，导致集合 丢失了一个数字 并且 有一个数字重复 。
+# 给定一个数组 nums 代表了集合 S 发生错误后的结果。
+# 请你找出重复出现的整数，再找到丢失的整数，将它们以数组的形式返回。
+
+# 官方解法：
+# 暴力解法
+# 单独检查1到n个元素，在检查每个元素时都遍历整个nums数组检查这个数字在nums中是否出现两次或者缺失
+# 使用dup和missing来记录丢失和缺失的数字
+
+class Solution:
+    def findErrorNums(self, nums: List[int]) -> List[int]:
+        m = len(nums)
+        dup = 0
+        missing = 0
+        for i in range(1, m + 1):
+            count = 0
+            for j in range(m):
+                if i == nums[j]:
+                    count += 1
+
+            if count == 0:
+                missing = i
+            elif count == 2:
+                dup = i
+
+        return [dup, missing]
+
+# 时间复杂度 O(N ** 2) N为给定数组长度
+# 空间复杂度 O(1) 只用了常数个变量
+
+# 优化暴力解法
+# 加上判断
+# elif dup ！= 0 and missing != 0:
+# break
+
+
+# 排序nums 数组后，相等的两个数字将会连续出现。此外，检查相邻的两个数字是否只相差 1 可以找到缺失数字。
+# 写不出来
+
+# 使用map
+# 思想类似使用字典来存储数字出现个数， 出现次数为2即为重复数字，出现次数为0即为缺失数字
+class Solution:
+    def findErrorNums(self, nums: List[int]) -> List[int]:
+        m = len(nums)
+        dic = {i:0 for i in range(1, m + 1)}
+        for i in range(m):
+            dic[nums[i]] += 1
+
+
+
+        for i in range(m):
+            if dic[i+1] == 2:
+                dup = i + 1
+            elif dic[i+1] == 0:
+                missing = i + 1
+
+        return [dup, missing]
+
+# 时间复杂度：O(N),N为数组长度
+# 空间复杂度：O(N),需要创建一个字典来存储数字和数字出现的个数
+
+# 在字典方法中使用字典存储每个数字出现的次数，每个数字都需要两个变量分别存储数字本身和出现次数，
+# 因此存储n个数字和出现次数需要2n的空间。如果使用数组arr代替字典，可以将空间减少到n。
+# 在数组 arr中，索引代表数字，arr存储每个数字出现的次数。例如 arr[i]存储数字 i 出现的次数。其他过程与字典方法相同。
+
+class Solution:
+    def findErrorNums(self, nums: List[int]) -> List[int]:
+        m = len(nums)
+        arr = [i*0 for i in range(m)]
+        for i in range(m):
+            arr[nums[i]-1] += 1
+
+
+        for i in range(m):
+            if arr[i] == 2:
+                dup = i + 1
+            elif arr[i] == 0:
+                missing = i + 1
+
+        return [dup, missing]
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(N),需要创建一个存储数字出现的个数
+
+# 使用额外空间不懂？？？？？？？(最优)
+
+# 使用异或运算？？？？？？？？？？？？？(最优)
+
+# 数学方法
+# 本质上就是一个数学问题，
+# (原数组的和-去掉重复的数据的数组和)=重复的数字
+# (从1到数组的长度length的数据的和(1+2+...+length))-(去掉重复的数据的数组和)=缺失的数字
+
