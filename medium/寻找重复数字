@@ -1,0 +1,88 @@
+# 题目描述
+# 定一个包含n + 1 个整数的数组nums ，其数字都在 1 到 n之间（包括 1 和 n），可知至少存在一个重复的整数。
+# 假设 nums 只有 一个重复的整数 ，找出 这个重复的数 。
+
+# 要求
+# 如何证明 nums 中至少存在一个重复的数字?
+# 你可以在不修改数组 nums 的情况下解决这个问题吗？
+# 你可以只用常量级 O(1) 的额外空间解决这个问题吗？
+# 你可以设计一个时间复杂度小于 O(n2) 的解决方案吗？
+
+# 示例1
+# 输入：nums = [1,3,4,2,2]
+# 输出：2
+
+# 示例2
+# 输入：nums = [3,1,3,4,2]
+# 输出：3
+
+# 示例3
+# 输入：nums = [1,1]
+# 输出：1
+
+# 示例4
+# 输入：nums = [1,1,2]
+# 输出：1
+
+# 个人想法使用数组arr的索引+1来表示1到n个数字,索引对应的值来存储数字出现的次数，遍历arr值大于2即为重复出现数字
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        m = len(nums)
+        arr = [i*0 for i in range(m)]
+        for i in range(m):
+            arr[nums[i] - 1] += 1
+
+        for i in range(m):
+            if arr[i] >= 2:
+                return i+1
+                break
+
+# 时间复杂度：O(N) N为数组长度
+# 空间复杂度：O(N),创建arr数组来存储
+# 缺点数组nums中的数字1~n要小于数组长度，会使用多余的存储空间
+
+# 暴力查找 逐个遍历元素与其它元素是否相等
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        m = len(nums)
+        for i in range(m):
+            for j in range(i+1, m):
+                if nums[i] == nums[j]:
+                    return nums[i]
+                    break
+
+# 用集合，把nums所有元素相加减去去掉重复元素和，除以nums数组长度与set(nums)长度只差，即为重复数字
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        differ = sum(nums) - sum(list(set(nums)))
+        differ_1 = len(nums) - len(list(set(nums)))
+        dup = differ//differ_1
+        return dup
+
+# 哈希表1，方法类似数组方法
+# 哈希表1，判断nums中的数是否在哈希表中，是即为重复数字，否把数字加入到哈希表中
+
+# nums是一个有序数组可以尝试二分查找法思路看leetcode
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        l, r, mid = 1, len(nums)-1, 0
+        ans = 0
+        while(l<=r):
+            mid = (l + r)//2
+            count = 0
+            for i in range(r + 1):
+                if nums[i] <= mid:
+                    count += 1
+
+            if count <= mid:
+                l = mid + 1
+            elif count > mid:
+                r = mid - 1
+                ans = mid
+
+        return ans
+# 有错误但是没找出来
+
+# 二进制：不会编程序
+
+# 快慢指针链表问题回来解决
