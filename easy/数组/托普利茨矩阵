@@ -1,0 +1,67 @@
+# 题目描述
+# 如果矩阵上每一条由左上到右下的对角线上的元素都相同，那么这个矩阵是 托普利茨矩阵 。
+# 给定一个M x N的矩阵，当且仅当它是托普利茨矩阵时返回True。
+
+# 示例1
+# 输入:
+# matrix = [
+#  [1,2,3,4],
+#  [5,1,2,3],
+#  [9,5,1,2]
+# ]
+# 输出: True
+# 解释:
+# 在上述矩阵中, 其对角线为:
+# "[9]", "[5, 5]", "[1, 1, 1]", "[2, 2, 2]", "[3, 3]", "[4]"。
+
+# 进阶
+# 如果矩阵存储在磁盘上，并且磁盘内存是有限的，因此一次最多只能将一行矩阵加载到内存中，该怎么办？
+# 如果矩阵太大以至于只能一次将部分行加载到内存中，该怎么办？
+
+# 个人想法，只需比较每行前n-1个元素与下一行后n-1个元素是否相等即可
+class Solution:
+    def isToeplitzMatrix(self, matrix: List[List[int]]) -> bool:
+        m, n = len(matrix), len(matrix[0])
+        for i in range(m-1):
+            if matrix[i][:n-1] == matrix[i+1][1:n]:
+                continue
+            else:
+                return False
+
+        return True
+# 此想法满足进阶条件二，不满足条件一
+# 空间复杂度：O(N)需要临时存储两行数组N为矩阵列数
+# 时间复杂度：O(M)M为矩阵行数
+
+# 官方解法
+# 首先要想明白的是怎么判断 (r1, c1 和 (r2, c2) 这两个点属于一条对角线。通过观察可以发现，
+# 在满足 r1 - c1 == r2 - c2 的情况下，这两个点属于同一条对角线。
+# 在上面的问题搞清楚的情况下，很容易就可以想到：让 groups[r-c] 存储每条对角线上遇到的第一个元素的值，
+# 如果之后遇到的任何一个值不等于之前存储的值，那么这个矩阵就不是托普利茨矩阵，否则就是。
+class Solution:
+    def isToeplitzMatrix(self, matrix: List[List[int]]) -> bool:
+        groups = {}
+        for r, row in enumerate(matrix):
+            for c, line in enumerate(row):
+                if r-c not in groups:
+                    groups[r-c] = line
+                else:
+                    if line != groups[r-c]:
+                        return False
+                        break
+
+        return True
+
+# 时间复杂度：O(M*N)M,N是矩阵的维度
+# 空间复杂度：O(M+N)
+
+# 对角线上的元素值相等，如果当前值不是对角线第一个出现的值那么，它前一个元素必然在左上角位置遍历整个矩阵满足
+# r==0 or c==0 or matrix[r-1][c-1] = val
+class Solution:
+    def isToeplitzMatrix(self, matrix: List[List[int]]) -> bool:
+        return all(r == 0 or c == 0 or matrix[r - 1][c - 1] == val
+        for r, row in enumerate(matrix)
+        for c, val in enumerate(row))  # all函数中迭代对象都为True返回True，否则为False
+
+# 时间复杂度：O(M*N)
+# 空间复杂度：O(1)
