@@ -1,66 +1,16 @@
- import csv
-import numpy as np
-import os
-from utils import OsJoin
-from opts import parse_opts
+# 问题描述 见力扣
+class Solution:
+    def maxChunksToSorted(self, arr: List[int]) -> int:
+        m = 0
+        ans = 0
+        for i in range(len(arr)):
+            m = max(m, arr[i])
+            if m == i:
+                ans += 1
 
-opt = parse_opts()
-root = opt.data_root_path
-class1 = opt.class1
-class2 = opt.class2
-datatype = opt.data_type
-csv_save_dir = OsJoin('csv/',opt.data_type)
+        return ans
 
-data_test_class_1=[]
-label_test_class_1=[]
-data_test_class_2=[]
-label_test_class_2=[]
-data_train_class_1=[]
-label_train_class_1=[]
-data_train_class_2=[]
-label_train_class_2=[]
-
-for filename in os.listdir(OsJoin(root,datatype,'test/', class1)):
-    data_test_class_1.append(OsJoin( datatype,'test/',class1, filename))
-    label_test_class_1.append(0)
-for filename in os.listdir(OsJoin(root,datatype,'train/', class1)):
-    data_train_class_1.append(OsJoin(datatype, 'train/',class1, filename))
-    label_train_class_1.append(0)
-for filename in os.listdir(OsJoin(root,datatype,'test/', class2)):
-    data_test_class_2.append(OsJoin(datatype,'test/', class2, filename))
-    label_test_class_2.append(1)
-for filename in os.listdir(OsJoin(root,datatype, 'train/',class2)):
-    data_train_class_2.append(OsJoin(datatype,'train/', class2, filename))
-    label_train_class_2.append(1)
-
-test_list_class_1 = np.array([data_test_class_1, label_test_class_1]).transpose()
-test_list_class_2 = np.array([data_test_class_2, label_test_class_2]).transpose()
-train_list_class_1 = np.array([data_train_class_1, label_train_class_1]).transpose()
-train_list_class_2 = np.array([data_train_class_2, label_train_class_2]).transpose()
-
-# np.random.seed(opt.manual_seed)
-# np.random.shuffle(train_list_class_1)
-# np.random.shuffle(train_list_class_2)
-#
-# #过采样
-# if train_list_class_1.shape[0]>train_list_class_2.shape[0]:
-#     train_list_class_2 = np.vstack(
-#         (train_list_class_2, train_list_class_2[0:train_list_class_1.shape[0] - train_list_class_2.shape[0], :]))
-# else:
-#     train_list_class_1 = np.vstack(
-#         (train_list_class_1, train_list_class_1[0:train_list_class_2.shape[0] - train_list_class_1.shape[0], :]))
-
-test_list = np.vstack((test_list_class_1, test_list_class_2))    # 按行堆叠
-train_list = np.vstack((train_list_class_1, train_list_class_2))
-# np.random.shuffle(train_list)
-# np.random.shuffle(test_list)
-
-csv_save_path = OsJoin(root, csv_save_dir)
-if not os.path.exists(csv_save_path):
-    os.makedirs(csv_save_path)
-with open(OsJoin(csv_save_path,str(class1)+'vs'+str(class2)+'_train.csv'), 'w', newline='') as f:  # 设置文件对象
-    f_csv = csv.writer(f)
-    f_csv.writerows(train_list)
-with open(OsJoin(csv_save_path, str(class1)+'vs'+str(class2)+'_test.csv'), 'w', newline='') as f:  # 设置文件对象
-    f_csv = csv.writer(f)
-    f_csv.writerows(test_list)
+# 官方解法
+# 当前k个数的最大值m等于当前索引i时说明0-m出现过可以分为一块，以此找出可分最多块数
+# 时间复杂度O(N)：N即为数组arr的长度
+# 空间复杂度O(1)，只用了m和ans来计数
