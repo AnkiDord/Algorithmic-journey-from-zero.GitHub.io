@@ -77,6 +77,16 @@ odd奇数，even偶数
 * 即元素i在所有奇数长度子数组出现的次数总和是
   left_odd*right_odd+left_even*right_even
 * 元素i左边元素共有i个，右边元素共有siz-i-1个
+class Solution:
+    def sumOddLengthSubarrays(self, arr: List[int]) -> int:
+        sum_out = 0
+        for i in range(len(arr)):
+            left_odd = (i+1) // 2
+            left_even = i // 2 +1
+            right_odd = (len(arr)-i) // 2
+            right_even = (len(arr)-i+1) // 2
+            sum_out += (left_odd*right_odd + left_even*right_even) * arr[i]
+        return sum_out
 
 
 
