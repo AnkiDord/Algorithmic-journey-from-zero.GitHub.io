@@ -38,5 +38,5 @@ class Solution:
         res = [j for i in nums for j in i]
         return([res[i : i+c] for i in range(0, len(res), c)])
 # 时间复杂度：O(M*N)M和N分别是nums的行数和列数
-# 空间复杂度：O(M*N)
+# 空间复杂度：O(M*N) 
 
