@@ -1,0 +1,129 @@
+# 题目描述
+# 索引从0开始长度为N的数组A，包含0到N - 1的所有整数。找到最大的集合S并返回其大小，
+# 其中 S[i] = {A[i], A[A[i]], A[A[A[i]]], ... }且遵守以下的规则。
+# 假设选择索引为i的元素A[i]为S的第一个元素，S的下一个元素应该是A[A[i]]，
+# 之后是A[A[A[i]]]... 以此类推，不断添加直到S出现重复的元素。
+
+# 示例 1
+# 输入: A = [5,4,0,3,1,6,2]
+# 输出: 4
+# 解释:
+# A[0] = 5, A[1] = 4, A[2] = 0, A[3] = 3, A[4] = 1, A[5] = 6, A[6] = 2.
+
+# 其中一种最长的 S[K]:
+# S[0] = {A[0], A[5], A[6], A[2]} = {5, 6, 2, 0}
+
+# 提示
+# N是[1, 20,000]之间的整数。
+# A中不含有重复的元素。
+# A中的元素大小在[0, N-1]之间。
+
+# 个人想法，给定数组为nums
+# 创建两个空数组arr，list_1，arr用来存储A[A[A[A[i....]]]], list_1用来存储arr的长度，
+# 和一个变量num，num范围在[0, N], N为数组长度，如果nums[num]不在arr中则，添加到arr中
+# 如果在arr中则中止循环并把arr长度保存在list_1中，最后输出list_1中的最大值即可
+
+class Solution:
+    def arrayNesting(self, nums: List[int]) -> int:
+        list_1 = []
+        for num in range(len(nums)):
+            arr = []
+            num_1 = nums[num]
+            for i in range(len(nums)):
+                if num_1 not in hash_table:
+                    arr.append(num_1)
+                    num_1 = nums[num_1]
+                else:
+                    list_1.append(len(arr))
+                    i = len(nums) - 1
+
+        return max(arr)
+
+# 可惜我不会写代码，代码是错的，留个坑
+
+
+# 官方解法
+# 一 暴力[超过时间限制]
+# 方法类似个人想法，比个人想法更简单，由于nums[i]是下一个值的索引，当且仅当下一个索引值等于
+# 最初索引值时产生的索引开始重复，在此期间使用count来记录产生新的索引次数，
+# 使用res来保留最大索引次数，官方是java语言，照着写出python
+class Solution:
+    def arrayNesting(self, nums: List[int]) -> int:
+        res = 0
+        for i in range(len(nums)):
+            count = 1
+            start = nums[i]
+            start = nums[start]  # 第1次产生的索引， 少算的
+            while(start != nums[i]):
+                count += 1
+                start = nums[start]
+
+            res = max(res, count)
+
+        return res
+
+# count从1开始是因为，少算了一次，通过了844个例子，在第845个例子上超出时间范围
+
+# 时间复杂度：O(N**2)，N为给定数组长度，第一个N为for循环，第二个N为while，最次的情况就是把数组循环一遍
+# 空间复杂度：O(1)，只使用了res和count来存储数字
+
+# 二 采用访问过的数组记录信息
+# 在第一种暴力解法之上添加一个布尔类型长度为len(nums)的数组visited，初始值设置为False，因为给定数组中的值都在0-(n-1)之间，
+# 所以nums中的值可以当visited数组的索引值，如果当前start在visited没有出现则把对应位置的值赋值为True，在第一种方法中所有起
+# 始值都运行一遍，但是有些值之间会产生循环，visited是避免进行多余运算
+#
+class Solution:
+    def arrayNesting(self, nums: List[int]) -> int:
+        visited = ['False' for i in range(len(nums))]
+        res = 0
+        for i in range(len(nums)):
+            if visited[i] == 'False':
+                count = 1
+                start = nums[i]
+                start = nums[start]
+                while(start != nums[i]):
+                    count += 1
+                    start = nums[start]
+                    visited[start] = True
+
+                res = max(res, count)
+
+        return res
+
+# 时间复杂度：O(N),N为数组nums的长度
+# 空间复杂度：O(N),需要有一个布尔类型的数组长度为N
+# 牺牲了空间，减少了时间
+
+
+# 三 不使用额外空间
+# 在第二种方法中使用布尔类型的列表来跟踪已经访问过的数组元素，在访问过的位置放置最大整数值，因为元素范围
+# 1到20000之间
+
+class Solution:
+    def arrayNesting(self, nums: List[int]) -> int:
+        res = 0
+        for i in range(len(nums)):
+            if nums[i] != float('inf'):
+                count = 1
+                start = nums[i]
+                nums[i] = float('inf')  # 加了之后反而时间快了，空间小了
+                start = nums[start]  # 第1次产生的索引
+
+                while(start != float('inf')):
+                    temp = start
+                    count += 1
+                    start = nums[start]
+                    nums[temp] = float('inf')
+                res = max(res, count)
+
+        return res
+
+# 时间复杂度：O(N),N为数组长度
+# 空间复杂度：O(1),只用res，count变量
+# count为什么是1,因为少算了第一次产生的索引
+
+
+
+
+
+
