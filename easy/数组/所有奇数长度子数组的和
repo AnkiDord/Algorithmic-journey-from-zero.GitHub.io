@@ -81,13 +81,15 @@ class Solution:
     def sumOddLengthSubarrays(self, arr: List[int]) -> int:
         sum_out = 0
         for i in range(len(arr)):
-            left_odd = (i+1) // 2
+            left_odd = (i+1) // 2  # 这个是计算以奇数长度出现的可能性有几种，长度为1，不管几个都是一种，长度1，3算是两种，其余一样
             left_even = i // 2 +1
             right_odd = (len(arr)-i) // 2
             right_even = (len(arr)-i+1) // 2
             sum_out += (left_odd*right_odd + left_even*right_even) * arr[i]
         return sum_out
 
+# 时间复杂度：O(N)数组长度
+# 空间复杂度：O(1) 只需要sum_out存储数字
 
 
 
