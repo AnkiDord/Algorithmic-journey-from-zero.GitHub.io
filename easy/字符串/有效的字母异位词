@@ -1,0 +1,126 @@
+# 题目描述
+# 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+
+# 示例1
+# 输入: s = "anagram", t = "nagaram"
+# 输出: true
+
+# 示例2
+# 输入: s = "rat", t = "car"
+# 输出: false
+
+# 提示
+# 如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？
+
+# 个人想法使用哈希表来存储出现过的字母以及出现次数，最后看两个字符串各自的哈希表对应字母的键值是否相等即可
+# 判断条件有
+# 1. 两个字符串长度不相等 False
+# 2. 两个字符串的哈希表长度不相等 False
+# 3. 其中一个哈希表中的键不在另一个哈希表中 False
+# 4. 两个哈希表相同键对应的值不同 False
+# 5. 只有两个哈希表长度相等并且对应键的值相等 True
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        else:
+            count_s = {}
+            count_t = {}
+            for i in s:
+                if i not in count_s:
+                    count_s[i] = count_s.get(i, 0) + 1
+                else:
+                    count_s[i] += 1
+
+            for i in t:
+                if i not in count_t:
+                    count_t[i] = count_t.get(i, 0) + 1
+                else:
+                    count_t[i] += 1
+
+            if len(count_s) != len(count_t):
+                return False
+            else:
+                for i in count_s:
+                    if i not in count_t:
+                        return False
+                    elif count_s[i] == count_t[i]:
+                        continue
+                    else:
+                        return False
+                return True
+
+# 时间复杂度：O(N), N字符串的长度
+# 空间复杂度：O(S)， S为26个字母长度
+
+# 官方解法
+# 1 排序
+# t 是 ss 的异位词等价于「两个字符串排序后相等」。因此我们可以对字符串 ss 和 tt 分别排序，看排序后的字符串是否相等即可判断。此外，如果 ss 和 tt 的长度不同，tt 必然不是 ss 的异位词。
+#
+# 我也想到了排序但是，不了解未编码字符，所以用哈希表稳一些
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        else:
+            s, t = list(s), list(t)
+            s.sort()
+            t.sort()
+            if s == t:
+                return True
+            else:
+                return False
+# 时间复杂度：O(NlogN), 排序时间复杂度为O(NlogN), 比较两个字符串长度时间为O(N), 总的时间复杂度为O(NlogN) + O(N) = O(NlogN)
+# 空间复杂度：O(longN), 排序所消耗的空间
+
+# 2 哈希表，因为只有26个字母所以用数组的索引表示字母，索引对应的值表示出现频率(这种方法不能达到进阶要求)，用每个字母的ASCII值减去小a的ASCII值
+# 来对应数组的索引，只要两个数组中对应索引的元素值做差的绝对值大于0即返回False
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        else:
+            count_s = [0 * i for i in range(26)]
+            count_t = [0 * i for i in range(26)]
+            for i in s:
+                count_s[ord(i) - ord('a')] += 1     # ord的含义是将字符串转换为ASCII值
+            for i in t:
+                count_t[ord(i) - ord('a')] += 1
+
+            for i in range(len(count_s)):
+                if abs(count_s[i] - count_t[i]) > 0:   # abs绝对值
+                    return False
+
+            return True
+
+# 时间复杂度：O(N), 当s,t字符串长度相等时，字符串的长度N
+# 空间复杂度：O(S)， S为26个字母长度
+
+
+# 3 哈希表，用字典来存储字幕出现的频率，先统计s，在s统计的自字典中减去t中字母出现的频率
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t):
+            return False
+        else:
+            count = {}
+            for i in s:
+                if i not in count:
+                    count[i] = count.get(i, 0) + 1
+                else:
+                    count[i] += 1
+
+            for i in t:
+                if i not in count:
+                    return False
+                else:
+                    count[i] -= 1
+                    if count[i] < 0:
+                        return False
+
+            return True
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(S)
+
+
