@@ -1,0 +1,97 @@
+# 题目描述
+# 给定一个字符串 s，计算具有相同数量 0 和 1 的非空（连续）子字符串的数量，
+# 并且这些子字符串中的所有 0 和所有 1 都是连续的。
+# 重复出现的子串要计算它们出现的次数。
+
+# 个人想法这些子字符串长度必定都是偶数，并且长度的一半不是1就是0
+# 所以，以偶数长度截取字符串，并判断截取字符串前一部分的集合形式与后一部分的集合形式是否相等，并且前后两个集合是不相等的
+# 超出时间范围
+
+# 官方想法
+# 按字符分组
+# 我们可以将字符串 s 按照 0 和 1 的连续段分组，存在 counts 数组中，例如 s=00111011，可以得到这样的 counts 数组：counts={2,3,1,2}。
+# 这里 counts 数组中两个相邻的数一定代表的是两种不同的字符。假设 counts 数组中两个相邻的数字为 u 或者 v，它们对应着 u 个 0 和 v 个 1，或者 u 个 1 和 v 个0。
+# 它们能组成的满足条件的子串数目为min{u,v}，即一对相邻的数字对答案的贡献。
+# 我们只要遍历所有相邻的数对，求它们的贡献总和，即可得到答案。
+class Solution:
+    def countBinarySubstrings(self, s: str) -> int:
+        nums = 1
+        s = s + '2'
+        count = []
+        ans = 0
+        for i in range(1, len(s)):
+            if s[i] == s[i - 1]:
+                nums += 1
+            else:
+                count.append(nums)
+                nums = 1
+
+        for i in range(len(count) - 1):
+            ans += min(count[i], count[i + 1])
+
+        return ans
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(N)
+
+class Solution:
+    def countBinarySubstrings(self, s: str) -> int:
+        ptr = 0
+        n = len(s)
+        counts = []
+        while ptr < n:
+            c = s[ptr]
+            count = 0
+            while ptr < n and s[ptr] == c:
+                ptr += 1
+                count += 1
+
+            counts.append(count)
+        ans = 0
+        for i in range(len(counts) - 1):
+            ans += min(counts[i], counts[i + 1])
+
+        return ans
+
+
+# 改进，我问只是关心第i个元素前一个位置的count值，使用last记录前一个值的count值，与当前count值比较，ans加上最小值即可
+class Solution:
+    def countBinarySubstrings(self, s: str) -> int:
+        ptr = 0
+        n = len(s)
+        ans = 0
+        count = 0
+        while ptr < n:
+            c = s[ptr]
+            last = count
+            count = 0
+            while ptr < n and s[ptr] == c:
+                ptr += 1
+                count += 1
+
+            ans += min(last, count)
+
+        return ans
+
+
+class Solution:
+    def countBinarySubstrings(self, s: str) -> int:
+        ptr = 0
+        n = len(s)
+        ans = 0
+        last = 0
+        while ptr < n:
+            c = s[ptr]
+            count = 0
+            while ptr < n and s[ptr] == c:
+                ptr += 1
+                count += 1
+
+            ans += min(last, count)
+            last = count
+
+        return ans
+
+# 时间复杂度：O(N) ？？？？
+# 空间复杂度：O(1)
+
