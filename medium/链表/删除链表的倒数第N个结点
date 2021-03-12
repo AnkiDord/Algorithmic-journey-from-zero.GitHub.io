@@ -1,0 +1,148 @@
+# 题目描述
+# 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+# 进阶：你能尝试使用一趟扫描实现吗？
+
+
+# 示例1
+# 输入：head = [1,2,3,4,5], n = 2
+# 输出：[1,2,3,5]
+
+# 示例2
+# 输入：head = [1], n = 1
+# 输出：[]
+
+# 示例3
+# 输入：head = [1,2], n = 1
+# 输出：[1]
+
+# 个人想法 将链表反转，删除第n-1个
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseListNode(self, head):
+            if head == None or head.next == None:
+                return head
+            else:
+                newhead = self.reverseListNode(head)
+                head.next.next = head
+                head.next = None
+                return newhead
+
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        head = self.reverseListNode(head)
+        pred = head
+        if n == 1:
+            return reverseListNode(head.next)
+        else:
+            for _ in range(n-1):
+                pred = pred.next
+
+            pred.next = pred.next.next
+
+            return reverseListNode(head)
+
+
+# 总是超过最大递归限度
+
+# 官方解法
+# 1 计算链表长度
+# 一种容易想到的方法是，我们首先从头节点开始对链表进行一次遍历，得到链表的长度 LL。随后我们再从头节点开始对链表进行一次遍历，
+# 当遍历到第 L-n+1L−n+1 个节点时，它就是我们需要删除的节点。
+# 为了与题目中的 nn 保持一致，节点的编号从 11 开始，头节点为编号 11 的节点。
+# 为了方便删除操作，我们可以从哑节点开始遍历 L-n+1L−n+1 个节点。当遍历到第 L-n+1L−n+1 个节点时，
+# 它的下一个节点就是我们需要删除的节点，这样我们只需要修改一次指针，就能完成删除操作。
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        def getlength(head: ListNode):
+            length = 0
+            while head:
+                length += 1
+                head = head.next
+            return length
+
+        dummy = ListNode(0, head)
+        length = getlength(head)
+        pred = dummy
+        for _ in range(1, length - n + 1):
+            pred = pred.next
+
+        pred.next = pred.next.next
+
+        return dummy.next
+
+# 时间复杂度：O(N), N为链表head的长度
+# 空间复杂度：O(1)
+
+
+# 栈
+# 我们也可以在遍历链表的同时将所有节点依次入栈。根据栈「先进后出」的原则，我们弹出栈的第 nn 个节点就是需要删除的节点，
+# 并且目前栈顶的节点就是待删除节点的前驱节点。这样一来，删除操作就变得十分方便了。
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        dummy = ListNode(0, head)
+        curr = dummy
+        inn = list()
+        while curr.next:
+            inn.append(curr.next)
+            curr = curr.next
+
+        for _ in range(n):
+            inn.pop()
+
+        curr = inn[-1] if inn != [] else dummy
+        curr.next = curr.next.next
+
+        return dummy.next
+
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(N)
+
+# 双指针 快慢指针都指向head，快慢指针之间间隔n-1节点，快指针超越慢指针n个节点，当快指针指向链表末端(None)，慢指针正好在倒数第N个节点位置
+# 由于我们想找倒数第N+1个节点所以我们将慢指针放在哑节点处
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+        dammy = ListNode(0, head)
+        slow = dammy
+        fast = head
+
+        for _ in range(n):
+            fast = fast.next
+
+        while fast:
+            fast = fast.next
+            slow = slow.next
+
+        slow.next = slow.next.next
+
+        return dammy.next
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(1)
+
+
+
+
+
+
