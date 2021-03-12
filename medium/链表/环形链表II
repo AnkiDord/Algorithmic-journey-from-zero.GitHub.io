@@ -1,0 +1,91 @@
+# 题目描述
+# 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+# 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。
+# 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。
+# 说明：不允许修改给定的链表。
+# 进阶：
+# 你是否可以使用 O(1) 空间解决此题？
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        arr = {}
+        while head:
+            if arr.get(head):
+                return head
+            arr[head] = 1
+            head = head.next
+
+        return None
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(N)
+
+
+# 双指针
+# 创建两个指针，快指针f，慢指针s，f一次走两步，s一次走一步，f = 2s，如果存在环形链表那么f总会追上s,不存在环形链表那么f会先走完链表变成None
+# 当两个指针第一次相遇时快指针走了f = s + nb步，a表示链表表头到环形链表入口(不包含入口位置)的节点个数，b表示环形链表的节点个数，第一次相遇时
+# f走了n个b圈追上s，通过两个式子解出f = 2nb， s = nb
+# 第二次相遇，设k为记录指针走到链表入口节点时的步数 k = a + nb,也就是说s在走a步就到链表环形路口了，这时把f移到head处每次走一步当走了a步时正
+# 好和s相遇在环形链表入口处
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        if not head or not head.next:
+            return None
+
+        fast = head.next.next
+        slow = head.next
+        while fast != slow:
+            if not fast or not fast.next:
+                return None
+            fast = fast.next.next
+            slow = slow.next
+
+        fast = head
+        while fast != slow:
+            fast = fast.next
+            slow = slow.next
+
+        return fast
+
+# 时间复杂度：O(N)
+# 空间复杂度: O(1)
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        fast = head
+        slow = head
+        while True:
+            if not fast or not fast.next:
+                return None
+            fast = fast.next.next
+            slow = slow.next
+            if fast == slow:
+                break
+
+        fast = head
+
+        while fast != slow:
+            fast = fast.next
+            slow = slow.next
+
+        return fast
