@@ -1,0 +1,47 @@
+# 题目描述
+# 将两个链表合并，顺序按照升序
+
+# 官方解法
+# 1 递归
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        if l1 == None:
+            return l2
+        elif l2 == None:
+            return l1
+        elif l1.val < l2.val:
+            l1.next = self.mergeTwoLists(l1.next, l2)
+            return l1
+        else:
+            l2.next = self.mergeTwoLists(l1, l2.next)
+            return l2
+
+# 时间复杂度：O(M+N),M,N是两个链表的长度，
+# 空间复杂度：O(M+N)，mergeTwoLists函数每次递归的时候都需要调用栈，共调用M+N次
+
+
+# 2 迭代
+# 我们可以用迭代的方法来实现上述算法。当 l1 和 l2 都不是空链表时，判断 l1 和 l2 哪一个链表的头节点的值更小，
+# 将较小值的节点添加到结果里，当一个节点被添加到结果里之后，将对应链表中的节点向后移一位。
+
+class Solution:
+    def mergeTwoLists(self, l1, l2):
+        prehead = ListNode(-1)
+
+        prev = prehead
+        while l1 and l2:
+            if l1.val <= l2.val:
+                prev.next = l1
+                l1 = l1.next
+            else:
+                prev.next = l2
+                l2 = l2.next
+            prev = prev.next
+
+        # 合并后 l1 和 l2 最多只有一个还未被合并完，我们直接将链表末尾指向未合并完的链表即可
+        prev.next = l1 if l1 is not None else l2
+
+        return prehead.next  # .next是因为哨兵节点值为-1，不能将其包含在内
+
+# 时间复杂度: O(M+N)
+# 空间复杂度：O(1)
