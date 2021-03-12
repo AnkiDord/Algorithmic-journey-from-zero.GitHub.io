@@ -1,0 +1,17 @@
+# 题目描述
+# 编写一个程序，找到两个单链表相交的起始节点。具体看leetcode
+
+
+# 对A中的每一个值，都便利B看其是否相等，有相同节点就返回，没有就返回None
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+        currA = headA
+        currB = headB
+        while currA != currB:
+            currB = currB.next if currB else headA
+            currA = currA.next if currA else headB
+
+        return currA
+
+# 时间复杂度：O(M + N), M和N分别是链表A和B的长度
+# 空间复杂度：O(1)
