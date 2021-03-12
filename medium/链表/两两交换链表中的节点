@@ -1,0 +1,54 @@
+# 题目描述
+# 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+
+# 官方解法
+# 递归
+
+# 基线条件，当head或者head.next为空
+# 递归条件，每次两个节点head和newhead = head.next，因为每次递归都能将交换两个节点，所以将head.next = self.swapPairs(newhead.next)
+# 并将newhead.next = head完成本次递归的节点交换
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        if not head or not head.next:
+            return head
+
+        newhead = head.next
+        head.next = self.swapPairs(newhead.next)
+        newhead.next = head
+
+        return newhead
+
+
+
+# 2 迭代
+
+# 拿1->2->3->4举例
+# 需要使用3个指针a,b,tmp.创建一个亚节点dummy，最开始将三个指针指向dummy，第一轮中a->1,b->2,tmp->dummy，a.next = b.next,b.next = a,将
+# 1，2位置对换，这时a.next指向的是3，在第二轮迭代中a->3,b->4所以需要用指针tmp保留上一轮a指针的位置，并将tmp.next指向b
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        dummy = ListNode(0, head)
+        a, b, tmp = dummy, dummy, dummy
+        while b.next and b.next.next:
+            a = a.next
+            b = b.next.next
+
+            a.next, b.next, tmp.next = b.next, a, b
+            # 将b指向a，是为下次迭代能指向上轮b.next.next位置
+            tmp, b = a, a
+
+        return dummy.next
+
+# 时间复杂度：O(N)
+# 空间复杂度：O(1)
